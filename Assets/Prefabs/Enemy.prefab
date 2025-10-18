@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a090ad74e378cd4ebce4073454428f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBar2D
-  health: {fileID: -6547016601378775592}
+  health: {fileID: 0}
   fillTransform: {fileID: 1441775753601976217}
   showSecondsOnChange: 1
   hideWhenFull: 0
@@ -120,8 +120,8 @@ GameObject:
   - component: {fileID: 6187401301174318789}
   - component: {fileID: 2496569429315161413}
   - component: {fileID: 148859113585441482}
-  - component: {fileID: 3762860825101691420}
   - component: {fileID: -6547016601378775592}
+  - component: {fileID: 4149712664982134495}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -266,20 +266,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &3762860825101691420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8124900728800847885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af60544517853e418eea3b32d15cb7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  speed: 2
-  maxHP: 3
 --- !u!114 &-6547016601378775592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,6 +286,21 @@ MonoBehaviour:
   onDeath:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4149712664982134495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8124900728800847885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af60544517853e418eea3b32d15cb7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  speed: 2
+  damage: 5
+  health: {fileID: 0}
 --- !u!1 &8892781093855439587
 GameObject:
   m_ObjectHideFlags: 0

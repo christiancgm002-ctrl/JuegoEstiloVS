@@ -1,54 +1,47 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Health : MonoBehaviour
+
+
+public class Health : MonoBehaviour, IHealth
 {
-    [Header("Vida")]
+    [Header("Config")]
     public int maxHP = 5;
-    [SerializeField] int currentHP;
 
-    [Header("I-Frames")]
-    public float invincibleTime = 0.2f;
-    float iframesUntil;
+    [Header("Runtime")]
+    public int currentHP;
 
-    [Header("Eventos")]
-    public UnityEvent<int, int> OnHealthChanged; // (hpActual, hpMax)
-    public UnityEvent OnDamaged;
-    public UnityEvent OnDeath;
+    [Header("Events")]
+    public HealthChangedEvent onHealthChanged = new HealthChangedEvent();
+    public UnityEvent onDeath = new UnityEvent();
 
-    void OnEnable()
+    // === IHealth ===
+    public int MaxHP => maxHP;
+    public int CurrentHP => currentHP;
+
+    public void AddHealthChangedListener(UnityAction<int, int> l) => onHealthChanged.AddListener(l);
+    public void RemoveHealthChangedListener(UnityAction<int, int> l) => onHealthChanged.RemoveListener(l);
+    public void AddDeathListener(UnityAction l) => onDeath.AddListener(l);
+    public void RemoveDeathListener(UnityAction l) => onDeath.RemoveListener(l);
+
+    void Awake()
     {
-        currentHP = Mathf.Max(1, maxHP);
-        iframesUntil = 0f;
-        OnHealthChanged?.Invoke(currentHP, maxHP);
+        if (currentHP <= 0) currentHP = maxHP;
+        onHealthChanged?.Invoke(currentHP, maxHP);
     }
 
-    public bool IsAlive => currentHP > 0;
+    public void TakeDamage(int dmg)
+    {
+        if (dmg <= 0) return;
+        currentHP = Mathf.Max(0, currentHP - dmg);
+        onHealthChanged?.Invoke(currentHP, maxHP);
+        if (currentHP == 0) onDeath?.Invoke();
+    }
 
     public void Heal(int amount)
     {
-        if (!IsAlive) return;
-        currentHP = Mathf.Min(currentHP + amount, maxHP);
-        OnHealthChanged?.Invoke(currentHP, maxHP);
-    }
-
-    public void TakeDamage(int amount)
-    {
-        if (!IsAlive) return;
-        if (Time.time < iframesUntil) return; // invencible
-
-        currentHP -= Mathf.Max(1, amount);
-        OnDamaged?.Invoke();
-        OnHealthChanged?.Invoke(currentHP, maxHP);
-
-        if (currentHP <= 0)
-        {
-            currentHP = 0;
-            OnDeath?.Invoke();
-        }
-        else
-        {
-            iframesUntil = Time.time + invincibleTime;
-        }
+        if (amount <= 0) return;
+        currentHP = Mathf.Min(maxHP, currentHP + amount);
+        onHealthChanged?.Invoke(currentHP, maxHP);
     }
 }

@@ -1,44 +1,39 @@
-using UnityEngine;
-using UnityEngine.UI;
+﻿//using UnityEngine;
+//using UnityEngine.UI;
 
-public class HealthBarUI : MonoBehaviour
-{
-    public Health targetHealth;
-    public Slider slider;
+//public class PlayerHealthUI : MonoBehaviour
+//{
+//    public Health targetHealth;
+//    public Slider slider;
 
-    void Awake()
-    {
-        if (slider != null)
-        {
-            slider.minValue = 0;
-        }
-    }
+//    void Awake()
+//    {
+//        if (!targetHealth) targetHealth = FindFirstObjectByType<Health>();
+//    }
 
-    void OnEnable()
-    {
-        if (targetHealth != null)
-        {
-            targetHealth.OnHealthChanged.AddListener(UpdateBar);
-            // inicializa con los valores actuales
-            UpdateBar(targetHealthIsNull ? 0 : targetHealthMax(), targetHealthMax());
-        }
-    }
+//    void OnEnable()
+//    {
+//        if (targetHealth && slider)
+//        {
+//            slider.minValue = 0;
+//            slider.maxValue = targetHealth.MaxHP;
+//            slider.value = targetHealth.CurrentHP;
 
-    void OnDisable()
-    {
-        if (targetHealth != null)
-            targetHealth.OnHealthChanged.RemoveListener(UpdateBar);
-    }
+//            // ⬇️ nombre correcto del evento
+//            targetHealth.onHealthChanged.AddListener(OnHealthChanged);
+//        }
+//    }
 
-    void UpdateBar(int hp, int max)
-    {
-        if (slider == null) return;
-        slider.maxValue = max;
-        slider.value = hp;
-    }
+//    void OnDisable()
+//    {
+//        if (targetHealth)
+//            targetHealth.onHealthChanged.RemoveListener(OnHealthChanged);
+//    }
 
-    int targetHealthMax() => targetHealth ? targetHealth.GetType()
-        .GetField("maxHP").GetValue(targetHealth) as int? ?? 1 : 1;
-
-    bool targetHealthIsNull => targetHealth == null;
-}
+//    void OnHealthChanged(int hp, int max)
+//    {
+//        if (!slider) return;
+//        if (slider.maxValue != max) slider.maxValue = max;
+//        slider.value = hp;
+//    }
+//}

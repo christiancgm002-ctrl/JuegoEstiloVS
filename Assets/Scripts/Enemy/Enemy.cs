@@ -1,21 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 public class Enemy : MonoBehaviour
 {
     public float speed = 2f;
-    public Health health;  // referencia al componente Health
+    public int damage = 1;   // 🔹 visible en el Inspector
+    public Health health;
+
     private Transform target;
 
     void Awake()
     {
-        // obtiene el componente Health en el mismo GameObject
         if (!health) health = GetComponent<Health>();
-        // cuando la vida llega a 0, destruye el enemigo
         if (health != null)
             health.onDeath.AddListener(Die);
     }
 
+    // Ya no hace falta pasar daño aquí
     public void Init(Transform t)
     {
         target = t;
@@ -24,8 +25,7 @@ public class Enemy : MonoBehaviour
 
         if (health != null)
         {
-            health.currentHP = health.maxHP; // reinicia vida
-            // fuerza actualizaci�n de la barra
+            health.currentHP = health.maxHP;
             health.onHealthChanged.Invoke(health.currentHP, health.maxHP);
         }
 
@@ -42,7 +42,16 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         if (!health) health = GetComponent<Health>();
-        health?.TakeDamage(dmg);  // <-- aqu� usa el componente Health
+        health?.TakeDamage(dmg);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        var player = other.GetComponent<Player>() ?? other.GetComponentInParent<Player>();
+        if (player != null)
+        {
+            player.TakeDamage(damage); // 🔹 usa su propio daño interno
+        }
     }
 
     void Die()

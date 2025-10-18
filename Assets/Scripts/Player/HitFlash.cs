@@ -1,34 +1,40 @@
-// Scripts/Player/HitFlash.cs
 using UnityEngine;
-using System.Collections;
 
 public class HitFlash : MonoBehaviour
 {
     public Health health;
-    public SpriteRenderer sr;
-    public Color flashColor = new Color(1f, 0.5f, 0.5f);
-    public float flashTime = 0.1f;
+    public SpriteRenderer sprite;
+    public float flashTime = 0.08f;
 
-    Color _original;
     void Awake()
     {
-        if (!sr) sr = GetComponent<SpriteRenderer>();
         if (!health) health = GetComponent<Health>();
-        if (sr) _original = sr.color;
-        if (health) health.onHealthChanged.AddListener(OnChanged);
+        if (!sprite) sprite = GetComponentInChildren<SpriteRenderer>();
     }
-    void OnDestroy()
+
+    void OnEnable()
     {
-        if (health) health.onHealthChanged.RemoveListener(OnChanged);
+        if (health)
+            health.onHealthChanged.AddListener(OnDamaged);
     }
-    void OnChanged(int hp, int max)
+
+    void OnDisable()
     {
-        if (sr) StartCoroutine(Flash());
+        if (health)
+            health.onHealthChanged.RemoveListener(OnDamaged);
     }
-    IEnumerator Flash()
+
+    void OnDamaged(int hp, int max)
     {
-        sr.color = flashColor;
+        // Si quieres flashear solo cuando baja la vida, podrías comprobarlo con un valor anterior.
+        if (sprite) StartCoroutine(DoFlash());
+    }
+
+    System.Collections.IEnumerator DoFlash()
+    {
+        Color c = sprite.color;
+        sprite.color = new Color(c.r, c.g, c.b, 0.4f);
         yield return new WaitForSeconds(flashTime);
-        sr.color = _original;
+        sprite.color = c;
     }
 }

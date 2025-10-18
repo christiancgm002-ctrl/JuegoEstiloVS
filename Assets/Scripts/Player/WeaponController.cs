@@ -33,7 +33,10 @@ public class WeaponController : MonoBehaviour
 
     Transform FindClosestEnemy()
     {
-        var enemies = FindObjectsOfType<Enemy>();
+        var enemies = UnityEngine.Object.FindObjectsByType<Enemy>(
+        FindObjectsInactive.Exclude,
+        FindObjectsSortMode.None
+        );
         Transform closest = null;
         float minDist = float.MaxValue;
         foreach (var e in enemies)
